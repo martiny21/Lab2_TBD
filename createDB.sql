@@ -15,6 +15,7 @@ CREATE TABLE category (
 -- Crear la tabla almacen
 CREATE TABLE warehouse (
     warehouse_id SERIAL PRIMARY KEY, -- ID unico almacen
+    addres VARCHAR(255), NOT NULL,  -- direccion del almacen, escrito con una s menos para evitar problemas
     latitude DECIMAL(9,6) NOT NULL, -- Latitud del almacen
     longitude DECIMAL(9,6) NOT NULL, -- Longitud del almacen
     geom GEOMETRY(point, 4326) NOT NULL, -- Geometria de tipo punto (lugar almacen)
