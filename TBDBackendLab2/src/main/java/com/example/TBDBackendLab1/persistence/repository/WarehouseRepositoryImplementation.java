@@ -45,6 +45,9 @@ public class WarehouseRepositoryImplementation implements WarehouseRepository {
                             "FROM warehouse WHERE warehouse_id=:warehouse_id")
                     .addParameter("warehouse_id",warehouseId)
                     .executeAndFetchFirst(WarehouseEntity.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e; // Manejar la excepción si es necesario
         }
     }
 }

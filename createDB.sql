@@ -54,7 +54,8 @@ CREATE TABLE client (
     email VARCHAR(100) UNIQUE NOT NULL,
     client_number VARCHAR(20),
     client_password VARCHAR(100) UNIQUE NOT NULL,
-    is_admin BOOLEAN DEFAULT FALSE
+    is_admin BOOLEAN DEFAULT FALSE,
+    direction_geom GEOMETRY (point, 4326)   -- Geometria de tipo punto (punto asociado a la direccion)
 );
 
 -- Crear tabla orden
@@ -367,5 +368,30 @@ FROM delivery_points dp
 WHERE ST_Within(dp.delivery_geom, 
     ST_SetSRID(ST_PolygonFromText('POLYGON((-74.02 40.70, -74.02 40.73, -74.00 40.73, -74.00 40.70, -74.02 40.70))'), 4326)
 );
+
+CREATE OR REPLACE FUNCTION get_warehouses_in_region(region_name VARCHAR(60))
+RETURNS TABLE (
+    warehouse_id INT,
+    geom GEOMETRY,
+    latitude DECIMAL(9,6) ,
+    longitude DECIMAL(9,6)
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        w.warehouse_id,
+        w.geom,
+        w.latitude,
+        w.longitude
+    FROM 
+        warehouse w
+    JOIN 
+        regional r 
+    ON 
+        ST_Contains(r.geom, w.geom)
+    WHERE 
+        r.region = region_name;
+END;
+$$ LANGUAGE plpgsql;
 
 -- final XD
