@@ -19,7 +19,7 @@ CREATE TABLE warehouse (
     latitude DECIMAL(9,6) NOT NULL, -- Latitud del almacen
     longitude DECIMAL(9,6) NOT NULL, -- Longitud del almacen
     geom GEOMETRY(point, 4326) NOT NULL, -- Geometria de tipo punto (lugar almacen)
-    delivery_zone GEOMETRY(Polygon, 4326) -- Geometria de tipo poligono (zona de reparto asociada)
+    delivery_zone INTEGER REFERENCES comunas (gid) -- Comuna de donde se reparte (zona de reparto)
 );
 
 
@@ -27,10 +27,6 @@ CREATE TABLE warehouse (
 ALTER TABLE warehouse
 ADD CONSTRAINT  check_point CHECK (ST_GeometryType(geom) = 'ST_Point');
 
-ALTER TABLE warehouse
-ADD CONSTRAINT check_polygon CHECK (
-    delivery_zone IS NULL OR
-     ST_GeometryType(delivery_zone) = 'ST_Polygon');
 
 -- Crear tabla producto
 CREATE TABLE product (
@@ -393,5 +389,50 @@ BEGIN
         r.region = region_name;
 END;
 $$ LANGUAGE plpgsql;
+
+-- procedimiento almacenado que devuelve el almacen mas cercano a un cliente
+CREATE OR REPLACE FUNCTION find_nearest_warehouse(client_id_param INT)
+RETURNS TABLE (
+    warehouse_id INT,
+    address VARCHAR,
+    latitude DECIMAL(9,6),
+    longitude DECIMAL(9,6),
+    distance DOUBLE PRECISION
+) AS $$
+DECLARE
+    client_comuna_gid INT;
+BEGIN
+    -- Paso 1: Obtener la comuna donde se encuentra el cliente
+    SELECT co.gid
+    INTO client_comuna_gid
+    FROM comunas co, client c
+    WHERE c.client_id = client_id_param 
+    AND ST_Contains(co.geom, c.direction_geom);
+    
+    -- Verificar si se encontró la comuna del cliente
+    IF client_comuna_gid IS NULL THEN
+        RAISE EXCEPTION 'El cliente no está dentro de ninguna comuna válida';
+    END IF;
+
+    -- Paso 2: Buscar el almacén más cercano dentro de la misma comuna
+    RETURN QUERY
+    SELECT 
+        w.warehouse_id, 
+        w.addres, 
+        w.latitude, 
+        w.longitude,
+        ST_Distance(w.geom, c.direction_geom)
+    FROM 
+        warehouse w, client c
+    WHERE 
+        w.delivery_zone = client_comuna_gid -- Filtrar almacenes en la misma comuna
+    ORDER BY 
+        w.geom <-> (SELECT direction_geom FROM client WHERE client_id = client_id_param) -- Ordenar por distancia
+    LIMIT 1; -- Devuelve el almacén más cercano
+END;
+$$ LANGUAGE plpgsql;
+
+
+
 
 -- final XD

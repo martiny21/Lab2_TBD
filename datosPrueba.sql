@@ -1,9 +1,18 @@
-INSERT INTO warehouse (warehouse_id, geom, latitude, longitude)
-VALUES 
-    (1, ST_GeomFromText('POINT(-70.6506 -33.4405)', 4326), -33.4405, -70.6506), -- Santiago Centro
-    (2, ST_GeomFromText('POINT(-70.6106 -33.4263)', 4326), -33.4263, -70.6106), -- Providencia
-    (3, ST_GeomFromText('POINT(-70.7631 -33.5084)', 4326), -33.5084, -70.7631), -- Maipú
-    (4, ST_GeomFromText('POINT(-70.5788 -33.6117)', 4326), -33.6117, -70.5788), -- Puente Alto
-    (5, ST_GeomFromText('POINT(-70.5933 -33.4565)', 4326), -33.4565, -70.5933), -- Ñuñoa
-    (6, ST_GeomFromText('POINT(-71.0000 -33.0000)', 4326), -33.0000, -71.0000); -- Fuera del polígono
+-- datos de prueba para warehouse
+INSERT INTO warehouse (addres, latitude, longitude, geom, delivery_zone) VALUES
 
+('Av. Providencia 1234', -33.4350, -70.6280, ST_SetSRID(ST_MakePoint(-70.6280, -33.4350), 4326), 83),
+('Av. Providencia 5678', -33.4335, -70.6275, ST_SetSRID(ST_MakePoint(-70.6275, -33.4335), 4326), 83); -- Geometría en la misma zona de reparto (comuna 83 Santiago)
+
+
+-- datos de prueba para client
+INSERT INTO client (client_name, direction, email, client_number, client_password, direction_geom) VALUES
+('Juan Pérez', 'Av. Nueva Providencia 456', 'juan.perez@example.com', '123456789', 'password123', ST_SetSRID(ST_MakePoint(-70.6263, -33.4340), 4326)),
+('María López', 'Av. Las Condes 789', 'maria.lopez@example.com', '987654321', 'password456', ST_SetSRID(ST_MakePoint(-70.6000, -33.4200), 4326)),
+('Carlos Díaz', 'Calle San Diego 123', 'carlos.diaz@example.com', '555123456', 'password789', ST_SetSRID(ST_MakePoint(-70.6500, -33.4500), 4326)),
+('Ana Rojas', 'Av. La Florida 890', 'ana.rojas@example.com', '555789123', 'password101', ST_SetSRID(ST_MakePoint(-70.5850, -33.5400), 4326)),
+('Pedro Sánchez', 'Av. Independencia 333', 'pedro.sanchez@example.com', '555321789', 'password202', ST_SetSRID(ST_MakePoint(-70.6500, -33.4000), 4326)),
+('Lucía Ortega', 'Av. Macul 432', 'lucia.ortega@example.com', '555987654', 'password303', ST_SetSRID(ST_MakePoint(-70.5700, -33.4700), 4326)),
+('Ricardo Fernández', 'Av. Quilicura 765', 'ricardo.fernandez@example.com', '555654321', 'password404', ST_SetSRID(ST_MakePoint(-70.7300, -33.3750), 4326)),
+('Laura Salas', 'Av. Maipú 1234', 'laura.salas@example.com', '555111222', 'password505', ST_SetSRID(ST_MakePoint(-70.7650, -33.5100), 4326)),
+('Sofía Castillo', 'Calle Vitacura 876', 'sofia.castillo@example.com', '555222333', 'password606', ST_SetSRID(ST_MakePoint(-70.6000, -33.3900), 4326));
