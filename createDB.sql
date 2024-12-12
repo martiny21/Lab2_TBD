@@ -12,21 +12,19 @@ CREATE TABLE category (
     category_name VARCHAR(100) NOT NULL
 );
 
--- Crear la tabla almacen
+-- Crear la tabla almacén
 CREATE TABLE warehouse (
-    warehouse_id SERIAL PRIMARY KEY, -- ID unico almacen
-    addres VARCHAR(255) NOT NULL,  -- direccion del almacen, escrito con una s menos para evitar problemas
-    latitude DECIMAL(9,6) NOT NULL, -- Latitud del almacen
-    longitude DECIMAL(9,6) NOT NULL, -- Longitud del almacen
-    geom GEOMETRY(point, 4326) NOT NULL, -- Geometria de tipo punto (lugar almacen)
+    warehouse_id SERIAL PRIMARY KEY, -- ID único almacén
+    addres VARCHAR(255) NOT NULL,  -- dirección del almacén, escrito con una "s" menos para evitar problemas
+    latitude DECIMAL(9,6) NOT NULL, -- Latitud del almacén
+    longitude DECIMAL(9,6) NOT NULL, -- Longitud del almacén
+    geom GEOMETRY(point, 4326) NOT NULL, -- Geometría de tipo punto (lugar almacén)
     delivery_zone INTEGER REFERENCES comunas (gid) -- Comuna de donde se reparte (zona de reparto)
 );
 
-
--- Chequeos de geometrias validas
+-- Chequeos de geometrías válidas
 ALTER TABLE warehouse
 ADD CONSTRAINT  check_point CHECK (ST_GeometryType(geom) = 'ST_Point');
-
 
 -- Crear tabla producto
 CREATE TABLE product (
@@ -51,7 +49,7 @@ CREATE TABLE client (
     client_number VARCHAR(20),
     client_password VARCHAR(100) UNIQUE NOT NULL,
     is_admin BOOLEAN DEFAULT FALSE,
-    direction_geom GEOMETRY (point, 4326)   -- Geometria de tipo punto (punto asociado a la direccion)
+    direction_geom GEOMETRY (point, 4326)   -- Geometría de tipo punto (punto asociado a la dirección)
 );
 
 -- Crear tabla orden
@@ -72,19 +70,19 @@ CREATE TABLE order_info (
 
 -- Crear la tabla de repartidor
 CREATE TABLE delivery_person (
-    delivery_person_id SERIAL PRIMARY KEY, -- ID unico del repartidor
+    delivery_person_id SERIAL PRIMARY KEY, -- ID único del repartidor
     name VARCHAR(255) NOT NULL, -- Nombre del repartidor
     contact_number VARCHAR(20) -- Número de contacto
 );
 
--- Crear Tabla con los puntos donde se repartieron ordenes
+-- Crear Tabla con los puntos donde se repartieron órdenes
 CREATE TABLE delivery_points (
-    delivery_id SERIAL PRIMARY KEY, -- ID unico de la entrega
+    delivery_id SERIAL PRIMARY KEY, -- ID único de la entrega
     delivery_person_id INTEGER NOT NULL
-     REFERENCES delivery_person (delivery_person_id) ON DELETE CASCADE, -- Relacion con el repartidor
+     REFERENCES delivery_person (delivery_person_id) ON DELETE CASCADE, -- Relación con el repartidor
     order_id INTEGER NOT NULL 
-    REFERENCES order_info (order_id) ON DELETE CASCADE, -- Relacion con la orden
-    delivery_geom GEOMETRY(Point, 4326) NOT NULL, -- Punto donde se realizo la entrega
+    REFERENCES order_info (order_id) ON DELETE CASCADE, -- Relación con la orden
+    delivery_geom GEOMETRY(Point, 4326) NOT NULL, -- Punto donde se realizó la entrega
     delivery_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Fecha y hora de la entrega
 );
 
@@ -134,7 +132,7 @@ CREATE TABLE problematic_order (
     stock_issues_count INT NOT NULL DEFAULT 0 CHECK (stock_issues_count >= 0)
 );
 
--- Crear insertion triggert function
+-- Crear insertion trigger function
 CREATE OR REPLACE FUNCTION insertion_trigger_function()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -350,14 +348,14 @@ INSERT
     ON order_detail FOR EACH ROW
 EXECUTE FUNCTION update_stock_and_order_total ();
 
--- Idea para futurua implementacion de calcular el almacen mas cercano a un cliente
+-- Idea para futura implementación de calcular el almacén más cercano a un cliente
 SELECT ST_Distance(
     ST_SetSRID(ST_MakePoint(-74.005, 40.710), 4326),
     w.geom
 ) AS distance_in_meters
 FROM warehouse w;
 
--- Idea para futura implementacion de busqueda de repartidores 
+-- Idea para futura implementación de búsqueda de repartidores
 -- que entregaron en una zona de reparto
 SELECT dp.delivery_id, dp.delivery_date
 FROM delivery_points dp
@@ -365,6 +363,7 @@ WHERE ST_Within(dp.delivery_geom,
     ST_SetSRID(ST_PolygonFromText('POLYGON((-74.02 40.70, -74.02 40.73, -74.00 40.73, -74.00 40.70, -74.02 40.70))'), 4326)
 );
 
+-- procedimiento almacenado que devuelve todos los almacenes de una región
 CREATE OR REPLACE FUNCTION get_warehouses_in_region(region_name VARCHAR(60))
 RETURNS TABLE (
     warehouse_id INT,
@@ -390,7 +389,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- procedimiento almacenado que devuelve el almacen mas cercano a un cliente
+-- procedimiento almacenado que devuelve el almacén más cercano a un cliente
 CREATE OR REPLACE FUNCTION find_nearest_warehouse(client_id_param INT)
 RETURNS TABLE (
     warehouse_id INT,
@@ -432,7 +431,29 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
+-- Procedimiento almacenado que devuelve todos los repartidores que han entregado pedidos en una comuna
+CREATE OR REPLACE FUNCTION get_delivery_persons_in_comuna(comuna_name VARCHAR(60))
+    RETURNS TABLE (
+        delivery_person_id INT,
+        name VARCHAR,
+        contact_number VARCHAR
+    ) AS $$
+    BEGIN
+        RETURN QUERY
+            SELECT DISTINCT
+                dp.delivery_person_id,
+                dp.name,
+                dp.contact_number
+            FROM
+                delivery_person dp
+            JOIN
+                delivery_points dpt ON dp.delivery_person_id = dpt.delivery_person_id
+            JOIN
+                comunas c ON ST_Contains(c.geom, dpt.delivery_geom)
+            WHERE
+                c.name = comuna_name;
+    END;
+$$ LANGUAGE plpgsql;
 
 
 -- final XD
