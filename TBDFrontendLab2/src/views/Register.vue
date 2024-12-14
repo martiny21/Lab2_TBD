@@ -44,13 +44,6 @@ export default {
     methods: {
         async registerClient() {
             try {
-                const clientData = {
-                    client_name: this.name,
-                    email: this.email,
-                    client_number: this.number,
-                    direction: this.direction,
-                    client_password: this.password
-                };
 
                 if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(position => {
@@ -60,7 +53,7 @@ export default {
                         latitude,
                         longitude
                     };
-                    this.getAddress(latitude, longitude);
+                    //this.getAddress(latitude, longitude);
                     console.log(location);
                 }, error => {
                     console.log(error);
@@ -68,6 +61,18 @@ export default {
                 } else {
                     alert('Geolocation is not supported by this browser.');
                 }
+
+                const clientData = {
+                    client_name: this.name,
+                    email: this.email,
+                    client_number: this.number,
+                    direction: this.direction,
+                    client_password: this.password,
+                    client_latitude: latitude,
+                    client_longitude: longitude
+                };
+
+
 
                 const response = await axios.post('http://localhost:8090/client/register', clientData);
 
