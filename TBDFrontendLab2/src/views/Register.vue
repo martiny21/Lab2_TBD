@@ -52,6 +52,23 @@ export default {
                     client_password: this.password
                 };
 
+                if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    const location = {
+                        latitude,
+                        longitude
+                    };
+                    this.getAddress(latitude, longitude);
+                    console.log(location);
+                }, error => {
+                    console.log(error);
+                });
+                } else {
+                    alert('Geolocation is not supported by this browser.');
+                }
+
                 const response = await axios.post('http://localhost:8090/client/register', clientData);
 
                 if (response.status === 200) {
