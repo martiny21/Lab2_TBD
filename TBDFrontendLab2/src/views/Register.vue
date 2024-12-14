@@ -60,7 +60,7 @@ export default {
                         latitude,
                         longitude
                     };
-                    this.getAddress(latitude, longitude);
+                    //this.getAddress(latitude, longitude);
                     console.log(location);
                 }, error => {
                     console.log(error);
