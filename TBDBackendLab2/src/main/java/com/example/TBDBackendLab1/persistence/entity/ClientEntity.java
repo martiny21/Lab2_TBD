@@ -8,12 +8,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClientEntity {
-
     private Integer client_id;
     private String client_name;
     private String direction;
     private String email;
     private String client_number;
     private String client_password;
+    private Double latitude;
+    private Double longitude;
+    private String direction_geom;
     private boolean is_admin;
 }

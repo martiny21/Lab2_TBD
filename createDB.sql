@@ -47,7 +47,7 @@ CREATE TABLE client (
     direction VARCHAR(255),
     email VARCHAR(100) UNIQUE NOT NULL,
     client_number VARCHAR(20),
-    client_password VARCHAR(100) UNIQUE NOT NULL,
+    client_password VARCHAR(100) NOT NULL,
     is_admin BOOLEAN DEFAULT FALSE,
     direction_geom GEOMETRY (point, 4326)   -- Geometría de tipo punto (punto asociado a la dirección)
 );

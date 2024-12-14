@@ -20,8 +20,8 @@ public class ClientRepositoryImplementation implements ClientRepository {
 
     @Override
     public ClientEntity addClient(ClientEntity client) {
-        String sql = "INSERT INTO client (client_name, direction, email, client_number, client_password, is_admin) " +
-                "VALUES (:client_name, :direction, :email, :client_number, :client_password, :is_admin)";
+        String sql = "INSERT INTO client (client_name, direction, email, client_number, client_password, is_admin, direction_geom) " +
+                "VALUES (:client_name, :direction, :email, :client_number, :client_password, :is_admin, ST_GeomFromText(:direction_geom, 4326))";
 
         try (org.sql2o.Connection con = sql2o.open()) {
             Integer generatedId = (Integer) con.createQuery(sql, true)
@@ -31,6 +31,7 @@ public class ClientRepositoryImplementation implements ClientRepository {
                     .addParameter("client_number", client.getClient_number())
                     .addParameter("client_password", client.getClient_password())
                     .addParameter("is_admin", client.is_admin())
+                    .addParameter("direction_geom", client.getDirection_geom()) // WKT: "POINT(lon lat)"
                     .executeUpdate()
                     .getKey();
 

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Client_p {
-        private Integer client_id;  // Asegúrate de que el nombre coincide con la columna SQL
+        private Integer client_id;
         private String client_name;
         private Integer total_orders;
         private Integer problematic_orders;
