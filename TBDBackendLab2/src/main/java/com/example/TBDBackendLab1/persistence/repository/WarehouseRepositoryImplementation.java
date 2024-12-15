@@ -91,7 +91,7 @@ public class WarehouseRepositoryImplementation implements WarehouseRepository {
                     return ResponseEntity.ok(warehouses.get(0));
                 } else {
                     // Si no hay resultados, retorna NOT FOUND
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+                    return ResponseEntity.ok(null);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

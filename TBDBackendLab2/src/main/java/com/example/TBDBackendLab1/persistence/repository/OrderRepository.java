@@ -11,4 +11,5 @@ public interface OrderRepository {
     List<OrderEntity> getByClientId(Integer client_id);
     boolean deleteOrder(Integer order_id);
     boolean updateOrderState(Integer order_id, String state);
+    List<OrderEntity> getall() ;
 }

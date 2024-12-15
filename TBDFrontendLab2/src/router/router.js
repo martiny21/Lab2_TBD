@@ -13,6 +13,9 @@ import almacenado from "../views/alma.vue"
 import alerts from "../views/alerts.vue"
 import problem from "../views/IssuesProblem.vue"
 import roundsman from "../views/roundsman.vue"
+import store from "../views/fetchStore.vue"
+import asignate from "../views/asignate.vue"
+import payinfo from "../views/payinfo.vue"
 
 const routes = [
   {
@@ -86,6 +89,21 @@ const routes = [
     path: "/roundsman",
     name: "roundsman",
     component: roundsman,
+  },
+  {
+    path: "/store",
+    name: "store",
+    component: store
+  },
+  {
+    path: "/asignate",
+    name: "asignate",
+    component: asignate
+  },
+  {
+    path: "/payinfo",
+    name: "payinfo",
+    component: payinfo
   }
 ]
 

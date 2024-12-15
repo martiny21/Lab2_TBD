@@ -29,5 +29,7 @@ public class OrderService {
 
     public boolean deleteOrder(Integer order_id){return orderRepository.deleteOrder(order_id);}
 
+    public List<OrderEntity> getorderpay(){return  orderRepository.getall();}
+
     }
 

@@ -51,5 +51,8 @@ public class OrderController {
         return orderService.deleteOrder(orderId);
     }
 
+    @GetMapping("/getorderpay")
+    public List<OrderEntity>getorderpay(){return orderService.getorderpay();}
+
 
 }

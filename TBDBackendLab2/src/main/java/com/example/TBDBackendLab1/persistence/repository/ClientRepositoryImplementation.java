@@ -108,7 +108,7 @@ public class ClientRepositoryImplementation implements ClientRepository {
     }
 
     public List<String> getRegion() {
-        String sql = "SELECT DISTINCT name FROM regiones"; // Asegúrate de que "name" es la columna de los nombres de las regiones
+        String sql = "SELECT DISTINCT region FROM regional"; // Asegúrate de que "name" es la columna de los nombres de las regiones
 
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql)
@@ -120,7 +120,7 @@ public class ClientRepositoryImplementation implements ClientRepository {
     }
 
     public List<String> getComuna() {
-        String sql = "SELECT DISTINCT name FROM comunas"; // Asegúrate de que "name" es la columna de los nombres de las regiones
+        String sql = "SELECT DISTINCT comuna FROM comunas"; // Asegúrate de que "name" es la columna de los nombres de las regiones
 
         try (Connection con = sql2o.open()) {
             return con.createQuery(sql)

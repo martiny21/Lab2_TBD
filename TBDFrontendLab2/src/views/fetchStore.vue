@@ -1,37 +1,39 @@
 <template>
     <div class="alert-container">
-      <h1>Repartidores por comuna</h1>
-      <form @submit.prevent="fetchroundsmanData">
+      <h1>Almacenes por region</h1>
+      <form @submit.prevent="fetchStoreData">
         <div>
-          <label for="comuna">Comunas</label>
-            <select id="comuna" v-model="comuna">
-              <option v-for="comuna in comunas">
-                {{ comuna }}
+          <label for="region">Regiones</label>
+            <select id="region" v-model="region">
+              <option v-for="region in regions">
+                {{ region }}
               </option>
             </select>
         </div>
         <button type="submit">Buscar</button>
       </form>
 
-      <div v-if="loading" class="loading">Buscando repartidores...</div>
+      <div v-if="loading" class="loading">Buscando regiones...</div>
       <div v-else-if="error" class="error">{{ error }}</div>
-      <div v-else-if="roundsmanData.length === 0" class="no-data">
+      <div v-else-if="almacenesData.length === 0" class="no-data">
         No hay datos disponibles.
       </div>
       <div v-else>
         <table class="alert-table">
           <thead>
             <tr>
-              <th>Repartidor ID</th>
-              <th>Nombre</th>
-              <th>Numero</th>
+              <th>Almacen ID</th>
+              <th>Espacio geometrico</th>
+              <th>Latitud</th>
+              <th>Longitud</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="roundsman in roundsmanData" :key="roundsman.delivery_person_id">
-              <td>{{ roundsman.delivery_person_id }}</td>
-              <td>{{ roundsman.name }}</td>
-              <td>{{ roundsman.contact_number }}</td>
+            <tr v-for="almacenes in almacenesData" :key="almacenes.warehouse_id">
+              <td>{{ almacenes.warehouse_id }}</td>
+              <td>{{ almacenes.geom }}</td>
+              <td>{{ almacenes.latitude}}</td>
+              <td>{{ almacenes.longitude }}</td>
             </tr>
           </tbody>
         </table>
@@ -43,59 +45,59 @@
   import axios from "axios";
 
   export default {
-    name: "RoundsmanPoligon",
+    name: "RegionPoligon",
     data() {
       return {
         loading: true,
         error: null,
-        roundsmanData: [],
-        comunas: [],
-        comuna: "",
+        almacenesData: [],
+        regions: [],
+        region: "",
       };
     },
     mounted() {
-      this.fetchComunas();
+      this.fetchRegions();
     },
     methods: {
-      fetchroundsmanData() {
-        console.log("Comuna:", this.comuna);
+      fetchStoreData() {
+        console.log("Region:", this.region);
         axios
-          .get("http://localhost:8080/delivery/personsByComuna",{params:{comunaName:this.comuna}}, {
+          .get("http://localhost:8080/warehouse/region",{params:{regionName:this.region}}, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("jwt")}`,
             },
           })
           .then((response) => {
-            this.roundsmanData = response.data;
+            this.almacenesData = response.data;
             this.loading = false;
-            console.log("Repartidores:", this.roundsmanData);
+            console.log("Almacenes:", this.almacenesData);
           })
           .catch((err) => {
-            console.error("Error al obtener los repartidores:", err);
-            this.error = "Hubo un problema al cargar los repartidores.";
+            console.error("Error al obtener los almacenes:", err);
+            this.error = "Hubo un problema al cargar los almacenes.";
             this.loading = false;
           });
       },
-      fetchComunas() {
+      fetchRegions() {
         axios
-          .get("http://localhost:8080/client/comunas", {
+          .get("http://localhost:8080/client/regiones", {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("jwt")}`,
             },
           })
           .then((response) => {
-            console.log("Comunas:", response.data);
-            this.comunas = response.data;
+            console.log("regions:", response.data);
+            this.regions = response.data;
             this.loading = false;
           })
           .catch((err) => {
-            console.error("Error al obtener las comunas:", err);
-            this.error = "Hubo un problema al cargar las comunas.";
+            console.error("Error al obtener las regions:", err);
+            this.error = "Hubo un problema al cargar las regions.";
             this.loading = false;
           });
       },
       created() {
-        this.fetchComunas();
+        this.fetchRegions();
       },
     },
   };

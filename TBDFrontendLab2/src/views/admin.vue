@@ -31,6 +31,16 @@
           Repartidores por poligono
         </router-link>
       </button>
+      <button>
+        <router-link class="button-link" to="/store">
+          Almacenes por region
+        </router-link>
+      </button>
+      <button>
+        <router-link class="button-link" to="/asignate">
+          Asignar envio
+        </router-link>
+      </button>
     </div>
   </template>
 

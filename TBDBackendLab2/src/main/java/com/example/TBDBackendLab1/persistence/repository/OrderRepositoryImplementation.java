@@ -105,6 +105,19 @@ public class OrderRepositoryImplementation implements OrderRepository {
             throw new RuntimeException("Error al actualizar el estado de la orden", e);
         }
     }
+    @Override
+    public List<OrderEntity> getall(){
+        String sql = "SELECT order_id, order_date, state, client_id, total " +
+                "FROM order_info " +
+                "WHERE state = 'pagada'";
+        try (org.sql2o.Connection con = sql2o.open()) {
+            return con.createQuery(sql)
+                    .executeAndFetch(OrderEntity.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e; // Manejo de errores adecuado
+        }
+    }
 
 
 }

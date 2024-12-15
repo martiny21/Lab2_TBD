@@ -1,38 +1,38 @@
 <template>
     <div class="alert-container">
-      <h1>Repartidores por comuna</h1>
-      <form @submit.prevent="fetchroundsmanData">
+      <h1>Almacen mas cercano</h1>
+      <form @submit.prevent="fetchStoreData">
         <div>
-          <label for="comuna">Comunas</label>
-            <select id="comuna" v-model="comuna">
-              <option v-for="comuna in comunas">
-                {{ comuna }}
+          <label for="region">Regiones</label>
+            <select id="region" v-model="region">
+              <option v-for="region in regions">
+                {{ region }}
               </option>
             </select>
         </div>
         <button type="submit">Buscar</button>
       </form>
 
-      <div v-if="loading" class="loading">Buscando repartidores...</div>
+      <div v-if="loading" class="loading">Buscando regiones...</div>
       <div v-else-if="error" class="error">{{ error }}</div>
-      <div v-else-if="roundsmanData.length === 0" class="no-data">
+      <div v-else-if="almacen.length === 0" class="no-data">
         No hay datos disponibles.
       </div>
       <div v-else>
         <table class="alert-table">
           <thead>
             <tr>
-              <th>Repartidor ID</th>
-              <th>Nombre</th>
-              <th>Numero</th>
+              <th>Almacen ID</th>
+              <th>Espacio geometrico</th>
+              <th>Latitud</th>
+              <th>Longitud</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="roundsman in roundsmanData" :key="roundsman.delivery_person_id">
-              <td>{{ roundsman.delivery_person_id }}</td>
-              <td>{{ roundsman.name }}</td>
-              <td>{{ roundsman.contact_number }}</td>
-            </tr>
+              <td>{{ this.almacen.warehouse_id }}</td>
+              <td>{{ this.almacen.geom }}</td>
+              <td>{{ this.almacen.latitude}}</td>
+              <td>{{ this.almacen.longitude }}</td>
           </tbody>
         </table>
       </div>
@@ -43,59 +43,42 @@
   import axios from "axios";
 
   export default {
-    name: "RoundsmanPoligon",
+    name: "Asignate",
     data() {
       return {
         loading: true,
         error: null,
-        roundsmanData: [],
-        comunas: [],
-        comuna: "",
+        almacen: [],
+        order_id: "",
+        client_id: "",
       };
     },
     mounted() {
-      this.fetchComunas();
+      this.fetchStore();
     },
     methods: {
-      fetchroundsmanData() {
-        console.log("Comuna:", this.comuna);
+      fetchStore() {
+        this.client_id = JSON.parse(sessionStorage.getItem("client_id"));
+        this.order_id = JSON.parse(sessionStorage.getItem("order_id"));
         axios
-          .get("http://localhost:8080/delivery/personsByComuna",{params:{comunaName:this.comuna}}, {
+          .get("http://localhost:8080/warehouse/nearest",{params:{id:this.client_id}}, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("jwt")}`,
             },
           })
           .then((response) => {
-            this.roundsmanData = response.data;
+            this.almacen = response.data;
             this.loading = false;
-            console.log("Repartidores:", this.roundsmanData);
+            console.log("Almacenes:", this.almacen);
           })
           .catch((err) => {
-            console.error("Error al obtener los repartidores:", err);
-            this.error = "Hubo un problema al cargar los repartidores.";
-            this.loading = false;
-          });
-      },
-      fetchComunas() {
-        axios
-          .get("http://localhost:8080/client/comunas", {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-            },
-          })
-          .then((response) => {
-            console.log("Comunas:", response.data);
-            this.comunas = response.data;
-            this.loading = false;
-          })
-          .catch((err) => {
-            console.error("Error al obtener las comunas:", err);
-            this.error = "Hubo un problema al cargar las comunas.";
+            console.error("Error al obtener el almacen:", err);
+            this.error = "Hubo un problema al cargar el almacen.";
             this.loading = false;
           });
       },
       created() {
-        this.fetchComunas();
+        this.fetchStore();
       },
     },
   };

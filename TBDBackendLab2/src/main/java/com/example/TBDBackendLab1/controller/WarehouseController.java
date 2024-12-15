@@ -2,9 +2,7 @@ package com.example.TBDBackendLab1.controller;
 
 import com.example.TBDBackendLab1.persistence.entity.WarehouseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import com.example.TBDBackendLab1.service.WarehouseService;
 import org.sql2o.Sql2o;
@@ -19,9 +17,6 @@ public class WarehouseController {
 
     @Autowired
     private WarehouseService warehouseService;
-
-    @Autowired
-    private Sql2o sql2o;
 
     @PostMapping("/add")
     public WarehouseEntity addWarehouse(@RequestBody WarehouseEntity warehouse){
