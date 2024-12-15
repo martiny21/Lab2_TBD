@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import com.example.TBDBackendLab1.service.WarehouseService;
+import org.sql2o.Sql2o;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class WarehouseController {
     private WarehouseService warehouseService;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private Sql2o sql2o;
 
     @PostMapping("/add")
     public WarehouseEntity addWarehouse(@RequestBody WarehouseEntity warehouse){
@@ -34,32 +35,12 @@ public class WarehouseController {
 
     @GetMapping("/region")
     public ResponseEntity<List<Map<String, Object>>> getWarehousesByRegion(@RequestParam String regionName) {
-        try {
-            // Llama al procedimiento almacenado
-            List<Map<String, Object>> warehouses = jdbcTemplate.queryForList(
-                    "SELECT * FROM get_warehouses_in_region(?)",
-                    regionName
-            );
-            return ResponseEntity.ok(warehouses);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+        return warehouseService.getWarehousesByRegion(regionName);
     }
 
     @GetMapping("/nearest")
     public ResponseEntity<Map<String, Object>> getWarehousesByNearest(@RequestParam Integer id) {
-        try {
-
-            List<Map<String, Object>> warehouses = jdbcTemplate.queryForList(
-                    "SELECT * FROM find_nearest_warehouse(?)",
-                    id
-            );
-            return ResponseEntity.ok(warehouses.get(0));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+        return warehouseService.getWarehousesByNearest(id);
     }
 
 }

@@ -80,7 +80,7 @@ CREATE TABLE delivery_points (
     delivery_id SERIAL PRIMARY KEY, -- ID único de la entrega
     delivery_person_id INTEGER NOT NULL
      REFERENCES delivery_person (delivery_person_id) ON DELETE CASCADE, -- Relación con el repartidor
-    order_id INTEGER NOT NULL 
+    order_id INTEGER NOT NULL
     REFERENCES order_info (order_id) ON DELETE CASCADE, -- Relación con la orden
     delivery_geom GEOMETRY(Point, 4326) NOT NULL, -- Punto donde se realizó la entrega
     delivery_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Fecha y hora de la entrega
@@ -359,7 +359,7 @@ FROM warehouse w;
 -- que entregaron en una zona de reparto
 SELECT dp.delivery_id, dp.delivery_date
 FROM delivery_points dp
-WHERE ST_Within(dp.delivery_geom, 
+WHERE ST_Within(dp.delivery_geom,
     ST_SetSRID(ST_PolygonFromText('POLYGON((-74.02 40.70, -74.02 40.73, -74.00 40.73, -74.00 40.70, -74.02 40.70))'), 4326)
 );
 
@@ -373,18 +373,18 @@ RETURNS TABLE (
 ) AS $$
 BEGIN
     RETURN QUERY
-    SELECT 
+    SELECT
         w.warehouse_id,
         w.geom,
         w.latitude,
         w.longitude
-    FROM 
+    FROM
         warehouse w
-    JOIN 
-        regional r 
-    ON 
+    JOIN
+        regional r
+    ON
         ST_Contains(r.geom, w.geom)
-    WHERE 
+    WHERE
         r.region = region_name;
 END;
 $$ LANGUAGE plpgsql;
@@ -405,9 +405,9 @@ BEGIN
     SELECT co.gid
     INTO client_comuna_gid
     FROM comunas co, client c
-    WHERE c.client_id = client_id_param 
+    WHERE c.client_id = client_id_param
     AND ST_Contains(co.geom, c.direction_geom);
-    
+
     -- Verificar si se encontró la comuna del cliente
     IF client_comuna_gid IS NULL THEN
         RAISE EXCEPTION 'El cliente no está dentro de ninguna comuna válida';
@@ -415,17 +415,17 @@ BEGIN
 
     -- Paso 2: Buscar el almacén más cercano dentro de la misma comuna
     RETURN QUERY
-    SELECT 
-        w.warehouse_id, 
-        w.addres, 
-        w.latitude, 
+    SELECT
+        w.warehouse_id,
+        w.addres,
+        w.latitude,
         w.longitude,
         ST_Distance(w.geom, c.direction_geom)
-    FROM 
+    FROM
         warehouse w, client c
-    WHERE 
+    WHERE
         w.delivery_zone = client_comuna_gid -- Filtrar almacenes en la misma comuna
-    ORDER BY 
+    ORDER BY
         w.geom <-> (SELECT direction_geom FROM client WHERE client_id = client_id_param) -- Ordenar por distancia
     LIMIT 1; -- Devuelve el almacén más cercano
 END;
