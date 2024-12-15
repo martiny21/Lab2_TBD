@@ -15,4 +15,6 @@ public interface ClientRepository {
     List<ClientQueryReport> getClientQueryReport();
     List<ClientAlert> getClientAlerts();
     List<Client_p>getClientIssueReport();
+    List<String> getRegion();
+    List<String> getComuna();
 }

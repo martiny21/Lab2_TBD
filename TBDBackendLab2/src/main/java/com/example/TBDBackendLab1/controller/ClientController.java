@@ -101,4 +101,10 @@ public class ClientController {
     public List<Client_p> getreport(){
         return clientService.getproblem();
     }
+
+    @GetMapping("/regiones")
+    public List<String> getRegions(){ return clientService.getRegion();}
+
+    @GetMapping("/comunas")
+    public List<String> getComunas(){ return clientService.getComunas();}
 }

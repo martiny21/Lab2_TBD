@@ -50,4 +50,8 @@ public class ClientService {
     public List<Client_p> getproblem() {
         return clientRepository.getClientIssueReport();
     }
+
+    public  List<String> getRegion() {return clientRepository.getRegion() ;}
+
+    public  List<String> getComunas() {return clientRepository.getComuna() ;}
 }

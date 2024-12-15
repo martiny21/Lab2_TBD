@@ -50,4 +50,8 @@ public class WarehouseRepositoryImplementation implements WarehouseRepository {
             throw e; // Manejar la excepción si es necesario
         }
     }
+
+
+
+
 }
