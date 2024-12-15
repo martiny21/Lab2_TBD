@@ -47,7 +47,7 @@ export default {
   methods: {
     fetchClientProblematicReport() {
       axios
-        .get("http://localhost:8090/client/geproblem", {
+        .get("http://localhost:8080/client/geproblem", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("jwt")}`,
           },

@@ -16,4 +16,5 @@ public class ProductEntity {
     private Integer stock;
     private String state;
     private Integer category_id;
+    private Integer warehouse_id;
 }

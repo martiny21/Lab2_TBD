@@ -41,7 +41,7 @@
     methods: {
       fetchClientQueryReport() {
         axios
-          .get("http://localhost:8090/client/getReports", {
+          .get("http://localhost:8080/client/getReports", {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("jwt")}`,
             },

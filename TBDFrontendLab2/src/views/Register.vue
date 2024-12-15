@@ -43,55 +43,64 @@ export default {
     },
     methods: {
         async registerClient() {
-            try {
+    try {
+        // Verificar si la geolocalización está soportada
+        if (!navigator.geolocation) {
+            alert('Geolocalización no está soportada por este navegador.');
+            return;
+        }
 
-                if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(position => {
+        // Obtener las coordenadas de forma asíncrona
+        const location = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(
+                position => {
                     const latitude = position.coords.latitude;
                     const longitude = position.coords.longitude;
-                    const location = {
-                        latitude,
-                        longitude
-                    };
-                    //this.getAddress(latitude, longitude);
-                    console.log(location);
-                }, error => {
-                    console.log(error);
-                });
-                } else {
-                    alert('Geolocation is not supported by this browser.');
+                    resolve({ latitude, longitude });
+                },
+                error => {
+                    console.error("Error obteniendo la ubicación:", error);
+                    reject(error);
                 }
+            );
+        });
 
-                const clientData = {
-                    client_name: this.name,
-                    email: this.email,
-                    client_number: this.number,
-                    direction: this.direction,
-                    client_password: this.password,
-                    client_latitude: latitude,
-                    client_longitude: longitude
-                };
+        console.log("Ubicación obtenida:", location);
 
+        // Construir el objeto clientData con las coordenadas
+        const clientData = {
+            client_name: this.name,
+            email: this.email,
+            client_number: this.number,
+            direction: this.direction,
+            client_password: this.password,
+            latitude: location.latitude,
+            longitude: location.longitude
+        };
 
+        console.log("Datos del cliente:", clientData);
 
-                const response = await axios.post('http://localhost:8090/client/register', clientData);
+        // Enviar los datos al servidor usando Axios
+        const response = await axios.post('http://localhost:8080/client/register', clientData);
 
-                if (response.status === 200) {
-                    alert('Registro exitoso');
-                    this.clearForm();
-                }
-            } catch (error) {
-                console.error('Error al registrar el cliente:', error);
-                alert('Hubo un error al registrar. Intenta de nuevo.');
-            }
-        },
-        clearForm() {
-            this.name = '';
-            this.email = '';
-            this.number = '';
-            this.direction = '';
-            this.password = '';
+        if (response.status === 200) {
+            alert('Registro exitoso');
+            this.clearForm(); // Limpiar el formulario después de un registro exitoso
+        } else {
+            alert('Hubo un problema al registrar el cliente.');
         }
+    } catch (error) {
+        console.error('Error al registrar el cliente:', error);
+        alert('Hubo un error al registrar. Intenta de nuevo.');
+    }
+},
+clearForm() {
+    this.name = '';
+    this.email = '';
+    this.number = '';
+    this.direction = '';
+    this.password = '';
+}
     }
 };
 </script>

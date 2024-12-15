@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import home from '../views/home.vue'
-import register from '../views/register.vue'
+import register from '../views/Register.vue'
 import login from '../views/Login.vue'
 import productList from '../views/productList.vue'
 import clients from '../views/clients.vue'
@@ -12,6 +12,7 @@ import admin from "../views/admin.vue"
 import almacenado from "../views/alma.vue"
 import alerts from "../views/alerts.vue"
 import problem from "../views/IssuesProblem.vue"
+import roundsman from "../views/roundsman.vue"
 
 const routes = [
   {
@@ -80,6 +81,11 @@ const routes = [
     path: "/problem",
     name: "problem",
     component: problem,
+  },
+  {
+    path: "/roundsman",
+    name: "roundsman",
+    component: roundsman,
   }
 ]
 

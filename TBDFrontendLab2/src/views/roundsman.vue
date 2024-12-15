@@ -1,25 +1,37 @@
 <template>
     <div class="alert-container">
-      <h1>Alertas de compras</h1>
-      <div v-if="loading" class="loading">Cargando alertas...</div>
+      <h1>Repartidores por comuna</h1>
+      <form @submit.prevent="fetchroundsmanData">
+    <div>
+      <label for="comuna">Comunas</label>
+      <select id="comuna" v-model="selectedComunas" multiple size="5">
+        <option v-for="comuna in comunas">
+          {{ comuna}}
+        </option>
+      </select>
+    </div>
+    <button type="submit">Buscar</button>
+  </form>
+
+      <div v-if="loading" class="loading">Buscando repartidores...</div>
       <div v-else-if="error" class="error">{{ error }}</div>
-      <div v-else-if="alertData.length === 0" class="no-data">
+      <div v-else-if="roundsmanData.length === 0" class="no-data">
         No hay datos disponibles.
       </div>
       <div v-else>
         <table class="alert-table">
           <thead>
             <tr>
-              <th>Cliente ID</th>
-              <th>Fecha</th>
-              <th>Descripcion</th>
+              <th>Repartidor ID</th>
+              <th>Nombre</th>
+              <th>Numero</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="alert in alertData" :key="alert.client_id">
-              <td>{{ alert.client_id }}</td>
-              <td>{{ alert.alert_date }}</td>
-              <td>{{ alert.alert_desc }}</td>
+            <tr v-for="roundsman in roundsmanData" :key="roundsman.delivery_person_id">
+              <td>{{ roundsman.delivery_person_id }}</td>
+              <td>{{ roundsman.name }}</td>
+              <td>{{ roundsman.contact_number }}</td>
             </tr>
           </tbody>
         </table>
@@ -31,36 +43,56 @@
   import axios from "axios";
 
   export default {
-    name: "ClientShopAlerts",
+    name: "RoundsmanPoligon",
     data() {
       return {
         loading: true,
         error: null,
-        alertData: [],
+        roundsmanData: [],
+        comunas: [],
+        comuna: null,
       };
     },
     methods: {
-      fetchClientShopAlerts() {
+      fetchroundsmanData() {
         axios
-          .get("http://localhost:8080/client/getAlerts", {
+          .get("http://localhost:8080/delivery/persons-in-comuna",comuna, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("jwt")}`,
             },
           })
           .then((response) => {
-            this.alertData = response.data;
+            this.roundsmanData = response.data;
             this.loading = false;
-            console.log("Alertas de compras:", this.alertData);
+            console.log("Repartidores:", this.roundsmanData);
           })
           .catch((err) => {
-            console.error("Error al obtener las alertas:", err);
-            this.error = "Hubo un problema al cargar las alertas.";
+            console.error("Error al obtener los repartidores:", err);
+            this.error = "Hubo un problema al cargar los repartidores.";
             this.loading = false;
           });
       },
-    },
-    created() {
-      this.fetchClientShopAlerts();
+      fetchComunas() {
+        axios
+          .get("http://localhost:8080/client/comunas", {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+            },
+          })
+          .then((response) => {
+            console.log("Comunas:", response.data);
+            this.comunas = response.data;
+            this.loading = false;
+          })
+          .catch((err) => {
+            console.error("Error al obtener las comunas:", err);
+            this.error = "Hubo un problema al cargar las comunas.";
+            this.loading = false;
+          });
+      },
+      created() {
+        this.fetchComunas();
+      },
     },
   };
   </script>

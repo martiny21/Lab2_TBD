@@ -61,7 +61,7 @@ export default {
       try {
         // Obtener detalles de la orden
         const response = await axios.get(
-          `http://localhost:8090/detail/getByOrderId/${orderId}`,
+          `http://localhost:8080/detail/getByOrderId/${orderId}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("jwt")}`,
@@ -74,7 +74,7 @@ export default {
         // Obtener información de cada producto
         for (let detail of details) {
           const productResponse = await axios.get(
-            `http://localhost:8090/product/getById/${detail.product_id}`,
+            `http://localhost:8080/product/getById/${detail.product_id}`,
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("jwt")}`,
@@ -88,7 +88,7 @@ export default {
 
         // Obtener el estado de la orden
         const orderResponse = await axios.get(
-          `http://localhost:8090/order/getById/${orderId}`,
+          `http://localhost:8080/order/getById/${orderId}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("jwt")}`,
@@ -116,7 +116,7 @@ export default {
 
       try {
         await axios.post(
-          `http://localhost:8090/order/update/${orderId}/${newState}`,
+          `http://localhost:8080/order/update/${orderId}/${newState}`,
           null, // No necesitas un cuerpo en este caso
           {
             headers: {

@@ -35,14 +35,14 @@
     params.append("email", this.email);
     params.append("password", this.password);
 
-    const response = await axios.post("http://localhost:8090/client/login", params, {
+    const response = await axios.post("http://localhost:8080/client/login", params, {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     });
 
     const token = response.data.token;
     if (token) {
       // Obtener al usuario a través del email
-      const userResponse = await axios.get(`http://localhost:8090/client/getByEmail/${this.email}`, {
+      const userResponse = await axios.get(`http://localhost:8080/client/getByEmail/${this.email}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -127,7 +127,7 @@ export default {
   methods: {
     fetchProducts() {
       axios
-        .get("http://localhost:8090/product/getall", {
+        .get("http://localhost:8080/product/getall", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("jwt")}`,
           },
@@ -143,7 +143,7 @@ export default {
     fetchOrders() {
       const clientId = this.userLogged.client_id;
       axios
-        .get(`http://localhost:8090/order/getByClientId/${clientId}`, {
+        .get(`http://localhost:8080/order/getByClientId/${clientId}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("jwt")}`,
           },
@@ -176,7 +176,7 @@ export default {
       };
 
       axios
-        .post("http://localhost:8090/detail/", detail, {
+        .post("http://localhost:8080/detail/", detail, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("jwt")}`,
           },

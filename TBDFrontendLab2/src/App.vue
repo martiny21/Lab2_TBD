@@ -1,7 +1,7 @@
 <script setup>
 import home from './views/home.vue'
-import register from './views/register.vue'
-import login from './views/login.vue'
+import register from './views/Register.vue'
+import login from './views/Login.vue'
 import productList from './views/productList.vue'
 import clients from './views/clients.vue'
 import logged from './views/logged.vue'
