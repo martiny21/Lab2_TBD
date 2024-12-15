@@ -4,23 +4,23 @@
         <form @submit.prevent="registerClient">
             <div>
                 <label for="name">Nombre:</label>
-                <input type="text" v-model="name" required />
+                <input type="text" v-model="name" placeholder="Ingrese su nombre" required />
             </div>
             <div>
                 <label for="direction">Dirección:</label>
-                <input type="text" v-model="direction" required />
+                <input type="text" v-model="direction" placeholder="Ingrese su dirección" required />
             </div>
             <div>
                 <label for="email">Correo Electrónico:</label>
-                <input type="email" v-model="email" required />
+                <input type="email" v-model="email" placeholder="ejemplo@gmail.com" required />
             </div>
             <div>
                 <label for="number">Teléfono:</label>
-                <input type="tel" v-model="number" required />
+                <input type="tel" v-model="number" placeholder="Ingrese su número de teléfono" required />
             </div>
             <div>
                 <label for="password">Contraseña:</label>
-                <input type="password" v-model="password" required />
+                <input type="password" v-model="password" placeholder="Cree una contraseña" required />
             </div>
             <button type="submit">Registrar Cliente</button>
         </form>
@@ -173,7 +173,12 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
     }
+
+button:hover {
+    background-color: #2b5f63;
+}
 
 .form-group {
     margin-left: 20px;

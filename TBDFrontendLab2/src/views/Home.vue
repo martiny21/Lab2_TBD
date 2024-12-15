@@ -7,17 +7,17 @@
             Bienvenido a la página principal de E-commerce
         </h1>
         <p>
-            donde se gestionen productos, órdenes de compra, clientes y el inventario en tiempo real.
+            Donde se gestionan productos, órdenes de compra, clientes y el inventario en tiempo real.
         </p>
     </div>
     <div>
         <button>
-            <router-link to="/register">
+            <router-link to="/register" class="button-link">
                 Registro de usuario
             </router-link>
         </button>
         <button>
-            <router-link to="/login">
+            <router-link to="/login" class="button-link">
                 Inicio de sesión
             </router-link>
         </button>
@@ -52,6 +52,10 @@
 
     .button-link {
         text-decoration: none;
+        color: white;
+    }
+
+    .button-link:hover {
         color: white;
     }
 
