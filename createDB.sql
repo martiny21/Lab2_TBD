@@ -436,7 +436,7 @@ CREATE OR REPLACE FUNCTION get_delivery_persons_in_comuna(comuna_name VARCHAR(60
             JOIN
                 comunas c ON ST_Contains(c.geom, dpt.delivery_geom)
             WHERE
-                c.name = comuna_name;
+                c.comuna = comuna_name;
     END;
 $$ LANGUAGE plpgsql;
 
