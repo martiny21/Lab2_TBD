@@ -1,17 +1,11 @@
 -- Actualizar usuario administrador
-INSERT INTO
-    client (client_id, client_name, direction, email, client_number, client_password, is_admin)
-VALUES 
-(1, 'admin', 'admin', 'admin@gmail.com', '+56912345678', '$2a$10$ttamfhlAvqrzcdztH4iEIezjv9AdnP34bBniL36WvgooPxnsymC3G', true);
-
-
 INSERT INTO client (client_id, client_name, direction, email, client_number, client_password, direction_geom, is_admin) VALUES
+(1, 'admin', 'admin', 'admin@gmail.com', '+56912345678', '$2a$10$ttamfhlAvqrzcdztH4iEIezjv9AdnP34bBniL36WvgooPxnsymC3G', ST_SetSRID(ST_MakePoint(-70.6263, -33.4340), 4326), true),
 (2,'Juan Pérez', 'Av. Nueva Providencia 456', 'juan.perez@example.com', '123456789', '$2a$10$ttamfhlAvqrzcdztH4iEIezjv9AdnP34bBniL36WvgooPxnsymC3G', ST_SetSRID(ST_MakePoint(-70.6263, -33.4340), 4326),false), -- Comuna santiago
 (3,'María López', 'Av. Las Condes 789', 'maria.lopez@example.com', '987654321', '$2a$10$ttamfhlAvqrzcdztH4iEIezjv9AdnP34bBniL36WvgooPxnsymC3G', ST_SetSRID(ST_MakePoint(-70.6000, -33.4200), 4326),false),
 (4,'Carlos Díaz', 'Calle San Diego 123', 'carlos.diaz@example.com', '555123456', '$2a$10$ttamfhlAvqrzcdztH4iEIezjv9AdnP34bBniL36WvgooPxnsymC3G', ST_SetSRID(ST_MakePoint(-70.6500, -33.4500), 4326),false),
 (5,'Ana Rojas', 'Av. La Florida 890', 'ana.rojas@example.com', '555789123', '$2a$10$ttamfhlAvqrzcdztH4iEIezjv9AdnP34bBniL36WvgooPxnsymC3G', ST_SetSRID(ST_MakePoint(-70.5850, -33.5400), 4326),false),
 (6,'Pedro Sánchez', 'Av. Independencia 333', 'pedro.sanchez@example.com', '555321789', 'password202', ST_SetSRID(ST_MakePoint(-70.6500, -33.4000), 4326),false);
-
 -- Insertar categorías
 INSERT INTO
     category (category_id, category_name)

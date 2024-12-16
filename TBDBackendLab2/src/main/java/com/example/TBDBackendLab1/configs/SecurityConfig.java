@@ -30,8 +30,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize // Configura las rutas que requieren autenticación
                         .requestMatchers("client/login").permitAll() // Todos pueden acceder
                         .requestMatchers("client/register").permitAll()
-                        .requestMatchers("warehouse/region").permitAll()
                         .requestMatchers("delivery/personsByComuna").permitAll()
+                        .requestMatchers("warehouse/region").permitAll()
                         .requestMatchers("warehouse/nearest").permitAll()
                         .anyRequest().authenticated() // Todas las demás rutas requieren autenticación
                 )

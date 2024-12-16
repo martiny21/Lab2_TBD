@@ -1,11 +1,14 @@
 package com.example.TBDBackendLab1.persistence.repository;
 
+import com.example.TBDBackendLab1.dto.DeliveryPerson;
 import com.example.TBDBackendLab1.persistence.entity.Delivery;
+import com.example.TBDBackendLab1.persistence.entity.ProductEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
 import java.util.List;
@@ -41,22 +44,18 @@ public class DeliveryRepositoryImplementation implements DeliveryRepository {
     }
 
     @Override
-    public ResponseEntity<List<Map<String, Object>>> getDeliveryPersonsByComuna(String comunaName){
-        String sql = "SELECT * FROM get_delivery_persons_in_comuna(:comunaName)";
+    public List<Map<String, Object>> getDeliveryPersonsByComuna(String comunaName) {
 
-        try (org.sql2o.Connection connection = sql2o.open()) {
-            // Ejecuta la consulta y obtiene los resultados
-            List<Map<String, Object>> deliveryPersons = connection.createQuery(sql)
-                    .addParameter("comunaName", comunaName) // Agrega el parámetro
+        try (Connection connection = sql2o.open()) {
+            // Llama al procedimiento almacenado o consulta SQL
+            String sql = "SELECT * FROM get_delivery_persons_in_comuna(:comunaName)";
+            return connection.createQuery(sql)
+                    .addParameter("comunaName", comunaName)
                     .executeAndFetchTable()
                     .asList();
-
-            // Retorna los datos en el ResponseEntity
-            return ResponseEntity.ok(deliveryPersons);
         } catch (Exception e) {
-            // Manejo de excepciones
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            throw e;
         }
     }
 

@@ -425,7 +425,7 @@ CREATE OR REPLACE FUNCTION get_delivery_persons_in_comuna(comuna_name VARCHAR(60
     ) AS $$
     BEGIN
         RETURN QUERY
-            SELECT DISTINCT
+            SELECT 
                 dp.delivery_person_id,
                 dp.name,
                 dp.contact_number

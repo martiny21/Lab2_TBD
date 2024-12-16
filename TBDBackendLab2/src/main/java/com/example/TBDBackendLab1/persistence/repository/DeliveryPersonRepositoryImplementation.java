@@ -15,7 +15,7 @@ public class DeliveryPersonRepositoryImplementation implements DeliveryPersonRep
 
     @Override
     public List<DeliveryPersonEntity> getDeliveryPersonsByComuna(String comunaName) {
-        String sql = "SELECT * FROM get_delivery_persons_in_comuna(:comunaName)";;
+        String sql = "SELECT * FROM get_delivery_persons_in_comuna(:comunaName)";
         try (org.sql2o.Connection con = sql2o.open()) {
             return con.createQuery(sql)
                     .addParameter("comunaName", comunaName)

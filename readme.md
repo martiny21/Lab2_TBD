@@ -1,4 +1,5 @@
 - Crear una base de datos llamada tdb2
+- Mediante query tool añadir la extension de postgis a la base de datos
 - Importar comunas y regiones mediante postGis a la base de datos
 
 - Crear tablas y triggers de la base de datos con el archivo dbCreate.sql
