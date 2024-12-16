@@ -1,5 +1,4 @@
 CREATE DATABASE tbd2;
-
 \c
 
 -- Extensión PostGIS
@@ -348,20 +347,6 @@ INSERT
     ON order_detail FOR EACH ROW
 EXECUTE FUNCTION update_stock_and_order_total ();
 
--- Idea para futura implementación de calcular el almacén más cercano a un cliente
-SELECT ST_Distance(
-    ST_SetSRID(ST_MakePoint(-74.005, 40.710), 4326),
-    w.geom
-) AS distance_in_meters
-FROM warehouse w;
-
--- Idea para futura implementación de búsqueda de repartidores
--- que entregaron en una zona de reparto
-SELECT dp.delivery_id, dp.delivery_date
-FROM delivery_points dp
-WHERE ST_Within(dp.delivery_geom,
-    ST_SetSRID(ST_PolygonFromText('POLYGON((-74.02 40.70, -74.02 40.73, -74.00 40.73, -74.00 40.70, -74.02 40.70))'), 4326)
-);
 
 -- procedimiento almacenado que devuelve todos los almacenes de una región
 CREATE OR REPLACE FUNCTION get_warehouses_in_region(region_name VARCHAR(60))
@@ -456,4 +441,4 @@ CREATE OR REPLACE FUNCTION get_delivery_persons_in_comuna(comuna_name VARCHAR(60
 $$ LANGUAGE plpgsql;
 
 
--- final XD
+-- final
